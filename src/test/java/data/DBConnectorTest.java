@@ -29,7 +29,7 @@ class DBConnectorTest {
 
     @Test
     void shouldGetUserByUsername() {
-        User user = dbConnector.selectUserByUsername("hkrook1");
+        User user = dbConnector.selectUserByUsernameAndPassword("hkrook1", "RVlBBbtijfU");
         assertAll(
                 () -> assertEquals("hkrook1", user.getUsername()),
                 () -> assertEquals("Hortense", user.getFirstName()),
@@ -40,7 +40,7 @@ class DBConnectorTest {
 
     @Test
     void shouldReturnNullWhenUsernameDoesNotExist() {
-        User user = dbConnector.selectUserByUsername("hkrook132");
+        User user = dbConnector.selectUserByUsernameAndPassword("hkrook132", "asdawer");
         assertNull(user);
     }
 
@@ -69,10 +69,17 @@ class DBConnectorTest {
                 () -> assertEquals("TestPassword2", user.getPassword())
         );
 
-        boolean isUserDeleted = dbConnector.deleteUser("TestUsername2");
+        boolean isUserDeleted = dbConnector.deleteUser("TestUsername2", "TestPassword2");
         assertTrue(isUserDeleted);
 
-        User deletedUser = dbConnector.selectUserByUsername("TestUsername2");
+        User deletedUser = dbConnector.selectUserByUsernameAndPassword("TestUsername2", "adasrae");
         assertNull(deletedUser);
+    }
+
+    @Test
+    void shouldUpdateUser() {
+        dbConnector.updatePassword("rcarvil2", "newPassword");
+        User user = dbConnector.selectUserByUsernameAndPassword("rcarvil2", "newPassword");
+        assertNotNull(user);
     }
 }

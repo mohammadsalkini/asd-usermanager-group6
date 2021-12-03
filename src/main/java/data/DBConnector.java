@@ -35,13 +35,14 @@ public class DBConnector {
         return users;
     }
 
-    public User selectUserByUsername(String userName) {
-        String sql = "SELECT username, firstName, lastName, password FROM userManagment WHERE username=?";
+    public User selectUserByUsernameAndPassword(String userName, String password) {
+        String sql = "SELECT username, firstName, lastName, password FROM userManagment WHERE username=? AND password=?";
         User user = null;
         try {
             try (Connection conn = this.connect();
                  PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setString(1, userName);
+                pstmt.setString(2, password);
                 ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     user = new User();
@@ -72,11 +73,27 @@ public class DBConnector {
         return new User(username, firstName, lastName, password);
     }
 
-    public boolean deleteUser(String username) {
-        String sql = "DELETE FROM userManagment WHERE username = ?";
+    public boolean deleteUser(String username, String password) {
+        String sql = "DELETE FROM userManagment WHERE username = ? AND password =?";
         try (Connection conn = this.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    public boolean updatePassword (String username, String password) {
+        String sql = "UPDATE userManagment SET password =? WHERE username =?";
+        try (Connection conn = this.connect();
+        PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, password);
+            pstmt.setString(2, username);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
