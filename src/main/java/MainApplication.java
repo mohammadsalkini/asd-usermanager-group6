@@ -1,6 +1,13 @@
+import view.UserView;
+import java.security.NoSuchAlgorithmException;
+
 public class MainApplication {
 
     public static void main(String[] args) {
-        System.out.println("Hello World");
+        try {
+            UserView.renderPage();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
     }
 }
