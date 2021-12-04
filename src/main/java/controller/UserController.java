@@ -13,4 +13,8 @@ public class UserController {
     public User createAccount (String username, String password, String firstName, String lastName) {
         return userService.createNewUser(username, firstName, lastName, password);
     }
+
+    public boolean isUserExisting (String userName) {
+        return userService.getUserByUserName(userName) != null;
+    }
 }
