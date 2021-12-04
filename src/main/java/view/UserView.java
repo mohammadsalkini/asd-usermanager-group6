@@ -1,5 +1,10 @@
 package view;
 
+import controller.UserController;
+import data.DBConnectorImpl;
+import model.User;
+import service.UserServiceImpl;
+
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
@@ -12,7 +17,9 @@ public class UserView {
     private static final String PASSWORD_AENDERN = "p";
     private static final String ABMELDEN = "a";
     private static final String ACCOUNT_LOESCHEN = "l";
-    static Scanner scanner = new Scanner(System.in);
+
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final UserController userController = new UserController(new UserServiceImpl(new DBConnectorImpl()));
 
 
     public static String mainPage() {
@@ -37,8 +44,10 @@ public class UserView {
                     }
                     break;
                 case REGISTRIEREN:
-                    // TODO: show the registration page -> this method should return a User Object
-                    // IF the returned user object is null then break, otherwise show the pager after login
+                    User user = registrationPage();
+                    if (user != null) {
+                        //TODO: show the page after login
+                    }
                     break;
                 case PROGRAMM_BEENDEN:
                     System.exit(0);
@@ -46,5 +55,21 @@ public class UserView {
                     System.out.println("Falsche Eingabe!");
             }
         }
+    }
+
+    private static User registrationPage() {
+        System.out.println("Geben Sie den Usernamen ein: ");
+        String username = scanner.next();
+        if (!userController.isUserExisting(username)) {
+            System.out.println("Geben Sie das Passwort ein: ");
+            String password = scanner.next();
+            System.out.println("Geben Sie den Vornamen ein: ");
+            String firstName = scanner.next();
+            System.out.println("Geben Sie den Nachnamen ein: ");
+            String lastName = scanner.next();
+            return userController.createAccount(username, password, firstName, lastName);
+        }
+        System.out.println("Der Benutzer existiert bereits, bitte erneut versuchen.\n\n");
+        return null;
     }
 }

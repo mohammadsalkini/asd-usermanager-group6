@@ -15,6 +15,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createNewUser(String username, String firstName, String lastName, String password) {
+        User user = connect.selectUserByUsernameAndPassword(username, password);
+        if (user == null) {
+            return connect.addUser(username, firstName, lastName, password);
+        }
         return null;
     }
 
@@ -36,5 +40,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean updatePassword(User user, String newPassword) {
         return connect.updatePassword(user.getUsername(), newPassword);
+    }
+    public User getUserByUserName(String userName) {
+        return connect.selectUserByUserName(userName);
     }
 }

@@ -82,4 +82,15 @@ class DBConnectorImplTest {
         User user = dbConnectorImpl.selectUserByUsernameAndPassword("rcarvil2", "newPassword");
         assertNotNull(user);
     }
+
+    @Test
+    void shouldGetUserByUserName() {
+        User user = dbConnectorImpl.selectUserByUserName("hkrook1");
+        assertAll(
+                () -> assertEquals("hkrook1", user.getUsername()),
+                () -> assertEquals("Hortense", user.getFirstName()),
+                () -> assertEquals("Krook", user.getLastName()),
+                () -> assertEquals("RVlBBbtijfU", user.getPassword())
+        );
+    }
 }
