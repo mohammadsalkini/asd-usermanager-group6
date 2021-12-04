@@ -8,18 +8,18 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DBConnectorTest {
+class DBConnectorImplTest {
 
-    private DBConnector dbConnector;
+    private DBConnectorImpl dbConnectorImpl;
 
     @BeforeEach
     void setup() {
-        dbConnector = new DBConnector();
+        dbConnectorImpl = new DBConnectorImpl();
     }
 
     @Test
     void shouldGetAllUsers() {
-        List<User> users = dbConnector.selectAllUsers();
+        List<User> users = dbConnectorImpl.selectAllUsers();
         assertAll(
                 () -> assertFalse(users.isEmpty()),
                 () -> assertEquals("drubinivitz0", users.get(0).getUsername()),
@@ -29,7 +29,7 @@ class DBConnectorTest {
 
     @Test
     void shouldGetUserByUsername() {
-        User user = dbConnector.selectUserByUsernameAndPassword("hkrook1", "RVlBBbtijfU");
+        User user = dbConnectorImpl.selectUserByUsernameAndPassword("hkrook1", "RVlBBbtijfU");
         assertAll(
                 () -> assertEquals("hkrook1", user.getUsername()),
                 () -> assertEquals("Hortense", user.getFirstName()),
@@ -40,13 +40,13 @@ class DBConnectorTest {
 
     @Test
     void shouldReturnNullWhenUsernameDoesNotExist() {
-        User user = dbConnector.selectUserByUsernameAndPassword("hkrook132", "asdawer");
+        User user = dbConnectorImpl.selectUserByUsernameAndPassword("hkrook132", "asdawer");
         assertNull(user);
     }
 
     @Test
     void shouldAddNewUserToDB() {
-        User user = dbConnector.addUser("TestUsername", "TestFirstName",
+        User user = dbConnectorImpl.addUser("TestUsername", "TestFirstName",
                 "TestLastName", "TestPassword");
 
         assertAll(
@@ -59,7 +59,7 @@ class DBConnectorTest {
 
     @Test
     void shouldDeleteUserFromDB() {
-        User user = dbConnector.addUser("TestUsername2", "TestFirstName2",
+        User user = dbConnectorImpl.addUser("TestUsername2", "TestFirstName2",
                 "TestLastName2", "TestPassword2");
 
         assertAll(
@@ -69,17 +69,17 @@ class DBConnectorTest {
                 () -> assertEquals("TestPassword2", user.getPassword())
         );
 
-        boolean isUserDeleted = dbConnector.deleteUser("TestUsername2", "TestPassword2");
+        boolean isUserDeleted = dbConnectorImpl.deleteUser("TestUsername2", "TestPassword2");
         assertTrue(isUserDeleted);
 
-        User deletedUser = dbConnector.selectUserByUsernameAndPassword("TestUsername2", "adasrae");
+        User deletedUser = dbConnectorImpl.selectUserByUsernameAndPassword("TestUsername2", "adasrae");
         assertNull(deletedUser);
     }
 
     @Test
     void shouldUpdateUser() {
-        dbConnector.updatePassword("rcarvil2", "newPassword");
-        User user = dbConnector.selectUserByUsernameAndPassword("rcarvil2", "newPassword");
+        dbConnectorImpl.updatePassword("rcarvil2", "newPassword");
+        User user = dbConnectorImpl.selectUserByUsernameAndPassword("rcarvil2", "newPassword");
         assertNotNull(user);
     }
 }
