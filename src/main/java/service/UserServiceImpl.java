@@ -41,7 +41,13 @@ public class UserServiceImpl implements UserService {
     public boolean updatePassword(User user, String newPassword) {
         return connect.updatePassword(user.getUsername(), newPassword);
     }
+
     public User getUserByUserName(String userName) {
         return connect.selectUserByUserName(userName);
+    }
+
+    @Override
+    public User getUserByUsernameAndPassword(String username, String password) {
+        return connect.selectUserByUsernameAndPassword(username, password);
     }
 }
