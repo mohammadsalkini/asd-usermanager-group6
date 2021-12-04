@@ -4,8 +4,6 @@ import controller.UserController;
 import data.DBConnectorImpl;
 import model.User;
 import service.UserServiceImpl;
-
-import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
 
@@ -31,7 +29,7 @@ public class UserView {
         return scanner.next();
     }
 
-    public static void renderPage() throws NoSuchAlgorithmException {
+    public static void renderPage() {
         while (true) {
             String userChoice = mainPage();
 

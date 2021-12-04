@@ -3,8 +3,6 @@ package controller;
 import model.User;
 import service.UserService;
 
-import java.security.NoSuchAlgorithmException;
-
 public class UserController {
     private final UserService userService;
 
