@@ -72,4 +72,31 @@ public class UserView {
         System.out.println("Der Benutzer existiert bereits, bitte erneut versuchen.\n\n");
         return null;
     }
+
+    private static boolean pageAfterLogin(User user) {
+        while (true) {
+            String userChoice = userControlPanel(user.getUsername());
+            switch (userChoice) {
+                case PASSWORD_AENDERN:
+                    break;
+                case ACCOUNT_LOESCHEN:
+                    break;
+                case ABMELDEN:
+                    break;
+                default:
+                    System.out.println("Falsche Eingabe");
+                    break;
+            }
+        }
+    }
+
+    private static String userControlPanel(String username) {
+        System.out.println("\nWillkommen " + username);
+        System.out.println("__________________________________\n");
+        System.out.println("'p': Passwort ändern.");
+        System.out.println("'a': Abmelden.");
+        System.out.println("'l': Account löschen.");
+        return scanner.next();
+    }
+
 }
