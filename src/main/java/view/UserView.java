@@ -73,11 +73,12 @@ public class UserView {
         return null;
     }
 
-    private static boolean pageAfterLogin(User user) {
+    private static boolean pageAfterLogin(User user) throws NoSuchAlgorithmException {
         while (true) {
             String userChoice = userControlPanel(user.getUsername());
             switch (userChoice) {
                 case PASSWORD_AENDERN:
+                    changePasswordPage(user);
                     break;
                 case ACCOUNT_LOESCHEN:
                     break;
@@ -99,4 +100,21 @@ public class UserView {
         return scanner.next();
     }
 
+    private static boolean changePasswordPage(User user) throws NoSuchAlgorithmException {
+        System.out.println("Neues Passwort: ");
+        String newPassword = scanner.next();
+        System.out.println("Neues Passwort nochmal eingeben: ");
+        String newPassword2 = scanner.next();
+        if (newPassword.equals(newPassword2)) {
+            if (userController.updatePassword(user.getUsername(), user.getPassword(), newPassword)) {
+                System.out.println("Passwort geändert.\n");
+                return true;
+            } else {
+                System.out.println("Fehler.\n");
+            }
+        } else {
+            System.out.println("Passwörter stimmen nicht überein.\n");
+        }
+        return false;
+    }
 }
