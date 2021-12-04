@@ -13,4 +13,6 @@ public interface UserService {
     User getUserByUsername(String username);
 
     boolean deleteAccount(String username);
+
+    User getUserByUserName (String userName);
 }
