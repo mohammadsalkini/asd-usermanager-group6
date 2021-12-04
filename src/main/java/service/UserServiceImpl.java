@@ -36,4 +36,9 @@ public class UserServiceImpl implements UserService{
     public boolean deleteAccount(String username) {
         return false;
     }
+
+    @Override
+    public User getUserByUserName(String userName) {
+        return connect.selectUserByUserName(userName);
+    }
 }
