@@ -16,7 +16,7 @@ public class UserController {
         return userService.createNewUser(username, firstName, lastName, password);
     }
 
-    public boolean updatePassword (String username, String oldPassword, String newPassword) throws NoSuchAlgorithmException {
+    public boolean updatePassword (String username, String oldPassword, String newPassword) {
         User userByUsername = userService.getUserByUsernameAndPassword(username, oldPassword);
         return userService.updatePassword(userByUsername, newPassword);
     }

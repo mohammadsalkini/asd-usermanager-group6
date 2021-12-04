@@ -73,7 +73,7 @@ public class UserView {
         return null;
     }
 
-    private static boolean pageAfterLogin(User user) throws NoSuchAlgorithmException {
+    private static boolean pageAfterLogin(User user) {
         while (true) {
             String userChoice = userControlPanel(user.getUsername());
             switch (userChoice) {
@@ -100,7 +100,7 @@ public class UserView {
         return scanner.next();
     }
 
-    private static boolean changePasswordPage(User user) throws NoSuchAlgorithmException {
+    private static boolean changePasswordPage(User user) {
         System.out.println("Neues Passwort: ");
         String newPassword = scanner.next();
         System.out.println("Neues Passwort nochmal eingeben: ");
