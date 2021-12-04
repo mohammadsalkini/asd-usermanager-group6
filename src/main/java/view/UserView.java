@@ -12,7 +12,7 @@ public class UserView {
     private static final String PASSWORD_AENDERN = "p";
     private static final String ABMELDEN = "a";
     private static final String ACCOUNT_LOESCHEN = "l";
-    static Scanner scanner = new Scanner(System.in);
+    private static Scanner scanner = new Scanner(System.in);
 
 
     public static String mainPage() {
