@@ -13,4 +13,7 @@ public interface UserService {
     User getUserByUsername(String username);
 
     boolean deleteAccount(String username);
+
+    boolean updatePassword(User user, String newPassword);
+
 }
