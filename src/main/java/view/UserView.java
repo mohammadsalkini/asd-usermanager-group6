@@ -107,7 +107,7 @@ public class UserView {
                 case ACCOUNT_LOESCHEN:
                     break;
                 case ABMELDEN:
-                    break;
+                    return false;
                 default:
                     System.out.println("Falsche Eingabe");
                     break;
