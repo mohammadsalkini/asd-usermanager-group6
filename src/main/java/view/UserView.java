@@ -120,7 +120,7 @@ public class UserView {
                 case ABMELDEN:
                     return;
                 default:
-                    System.out.println("Falsche Eingabe");
+                    System.out.println("Falsche Eingabe!");
                     break;
             }
         }
