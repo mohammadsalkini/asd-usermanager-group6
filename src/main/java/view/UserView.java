@@ -4,6 +4,7 @@ import controller.UserController;
 import data.DBConnectorImpl;
 import model.User;
 import service.UserServiceImpl;
+import utils.SessionTimer;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
@@ -19,6 +20,9 @@ public class UserView {
 
     private static final Scanner scanner = new Scanner(System.in);
     private static final UserController userController = new UserController(new UserServiceImpl(new DBConnectorImpl()));
+
+    private static final int TIMER_INTERVALL_IN_SECONDS = 60;
+    private static final SessionTimer sessionTimer = new SessionTimer(TIMER_INTERVALL_IN_SECONDS);
 
     public static String mainPage() {
         System.out.println("Willkommen im AccountManager");
@@ -97,15 +101,26 @@ public class UserView {
     }
 
     private static boolean pageAfterLogin(User user) throws NoSuchAlgorithmException {
+        sessionTimer.resetTimer(TIMER_INTERVALL_IN_SECONDS);
         while (true) {
             String userChoice = userControlPanel(user.getUsername());
             switch (userChoice) {
                 case PASSWORD_AENDERN:
+                    if (!sessionTimer.isSessionValid){
+                        System.out.println("Logout wegen Inaktivität von mehr als " + TIMER_INTERVALL_IN_SECONDS + " Sekunden.");
+                        return false;
+                    }
+                    sessionTimer.resetTimer(TIMER_INTERVALL_IN_SECONDS);
                     changePasswordPage(user);
                     break;
                 case ACCOUNT_LOESCHEN:
+                    if (!sessionTimer.isSessionValid){
+                        System.out.println("Logout wegen Inaktivität von mehr als " + TIMER_INTERVALL_IN_SECONDS + " Sekunden.");
+                        return false;
+                    }
+                    sessionTimer.resetTimer(TIMER_INTERVALL_IN_SECONDS);
                     deleteAccountPage(user);
-                    break;
+                    return false;
                 case ABMELDEN:
                     return false;
                 default:
@@ -116,13 +131,16 @@ public class UserView {
     }
 
     private static void deleteAccountPage(User user) {
+        sessionTimer.resetTimer(TIMER_INTERVALL_IN_SECONDS);
         System.out.println("Möchten Sie den Account wirklich löschen? (y oder n)");
         String input2 = scanner.next();
-        if (input2.equals("y")) {
+        if (!sessionTimer.isSessionValid){
+            System.out.println("Logout wegen Inaktivität von mehr als " + TIMER_INTERVALL_IN_SECONDS + " Sekunden.\n\n");
+        } else if (input2.equals("y")) {
             userController.deleteAccount(user.getUsername(), user.getPassword());
-            System.out.println("Ihr Account wurde gelöscht\n\n");
+            System.out.println("Ihr Account wurde gelöscht!\n\n");
         } else {
-            System.out.println("Ihr Account wird nicht gelöscht");
+            System.out.println("Ihr Account konnte nicht gelöscht werden!");
         }
     }
 
@@ -136,10 +154,21 @@ public class UserView {
     }
 
     private static boolean changePasswordPage(User user) throws NoSuchAlgorithmException {
+        sessionTimer.resetTimer(TIMER_INTERVALL_IN_SECONDS);
         System.out.println("Neues Passwort: ");
         String newPassword = scanner.next();
+        if (!sessionTimer.isSessionValid){
+            System.out.println("Logout wegen Inaktivität von mehr als " + TIMER_INTERVALL_IN_SECONDS + " Sekunden.");
+            return false;
+        }
+        sessionTimer.resetTimer(TIMER_INTERVALL_IN_SECONDS);
         System.out.println("Neues Passwort nochmal eingeben: ");
         String newPassword2 = scanner.next();
+        if (!sessionTimer.isSessionValid){
+            System.out.println("Logout wegen Inaktivität von mehr als " + TIMER_INTERVALL_IN_SECONDS + " Sekunden.");
+            return false;
+        }
+        sessionTimer.resetTimer(TIMER_INTERVALL_IN_SECONDS);
         if (newPassword.equals(newPassword2)) {
             if (userController.updatePassword(user.getUsername(), user.getPassword(), newPassword)) {
                 System.out.println("Passwort geändert.\n");
