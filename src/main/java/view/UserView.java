@@ -55,7 +55,7 @@ public class UserView {
                 case REGISTRIEREN:
                     User user = registrationPage();
                     if (user != null) {
-                        // TODO: show the page after login
+                        pageAfterLogin(user);
                     }
                     break;
                 case PROGRAMM_BEENDEN:
