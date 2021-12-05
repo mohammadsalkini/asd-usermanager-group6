@@ -1,5 +1,5 @@
 package controller;
-
+import utils.PasswordEncryptor;
 import model.User;
 import service.UserService;
 
@@ -12,17 +12,22 @@ public class UserController {
         this.userService = userService;
     }
 
-    public User createAccount(String username, String password, String firstName, String lastName) {
-        return userService.createNewUser(username, firstName, lastName, password);
+    public User login(String username, String password) throws NoSuchAlgorithmException {
+        String encryptedPassword = PasswordEncryptor.toHexString(PasswordEncryptor.getSHA(password));
+        return userService.getUserByUsernameAndPassword(username, encryptedPassword);
     }
 
-    public User login(String username, String password) {
-        return userService.getUserByUsernameAndPassword(username, password);
+    public User createAccount(String username, String password, String firstName, String lastName)
+            throws NoSuchAlgorithmException {
+        String encryptedPassword = PasswordEncryptor.toHexString(PasswordEncryptor.getSHA(password));
+        return userService.createNewUser(username, firstName, lastName, encryptedPassword);
     }
 
-    public boolean updatePassword(String username, String oldPassword, String newPassword) {
+    public boolean updatePassword(String username, String oldPassword, String newPassword)
+            throws NoSuchAlgorithmException {
+        String encryptedNewPassword = PasswordEncryptor.toHexString(PasswordEncryptor.getSHA(newPassword));
         User userByUsername = userService.getUserByUsernameAndPassword(username, oldPassword);
-        return userService.updatePassword(userByUsername, newPassword);
+        return userService.updatePassword(userByUsername, encryptedNewPassword);
     }
 
     public boolean deleteAccount(String username, String password) {
