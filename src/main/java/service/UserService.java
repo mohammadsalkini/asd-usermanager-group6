@@ -12,11 +12,11 @@ public interface UserService {
 
     User getUserByUsername(String username);
 
-    boolean deleteAccount(String username);
+    boolean deleteAccount(String username, String password);
 
     boolean updatePassword(User user, String newPassword);
 
-    User getUserByUserName (String userName);
+    User getUserByUserName(String userName);
 
     User getUserByUsernameAndPassword(String username, String password);
 

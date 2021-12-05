@@ -33,8 +33,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean deleteAccount(String username) {
-        return false;
+    public boolean deleteAccount(String username, String password) {
+        return connect.deleteUser(username, password);
     }
 
     @Override

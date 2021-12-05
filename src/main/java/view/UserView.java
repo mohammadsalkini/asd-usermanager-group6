@@ -8,7 +8,6 @@ import service.UserServiceImpl;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
-
 public class UserView {
 
     private static final String ANMELDEN = "a";
@@ -21,7 +20,6 @@ public class UserView {
     private static final Scanner scanner = new Scanner(System.in);
     private static final UserController userController = new UserController(new UserServiceImpl(new DBConnectorImpl()));
 
-
     public static String mainPage() {
         System.out.println("Willkommen im AccountManager");
         System.out.println("__________________________________\n");
@@ -31,7 +29,7 @@ public class UserView {
         return scanner.next();
     }
 
-    public static void renderPage()  throws NoSuchAlgorithmException{
+    public static void renderPage() throws NoSuchAlgorithmException {
         while (true) {
             String userChoice = mainPage();
 
@@ -46,13 +44,14 @@ public class UserView {
                             }
                         }
                         break;
-                        // IF the returned user object is null then break, otherwise show the pager after login
+                        // IF the returned user object is null then break, otherwise show the pager
+                        // after login
                     }
                     break;
                 case REGISTRIEREN:
                     User user = registrationPage();
                     if (user != null) {
-                        //TODO: show the page after login
+                        // TODO: show the page after login
                     }
                     break;
                 case PROGRAMM_BEENDEN:
@@ -105,6 +104,7 @@ public class UserView {
                     changePasswordPage(user);
                     break;
                 case ACCOUNT_LOESCHEN:
+                    deleteAccountPage(user);
                     break;
                 case ABMELDEN:
                     return false;
@@ -112,6 +112,17 @@ public class UserView {
                     System.out.println("Falsche Eingabe");
                     break;
             }
+        }
+    }
+
+    private static void deleteAccountPage(User user) {
+        System.out.println("Möchten Sie den Account wirklich löschen? (y oder n)");
+        String input2 = scanner.next();
+        if (input2.equals("y")) {
+            userController.deleteAccount(user.getUsername(), user.getPassword());
+            System.out.println("Ihr Account wurde gelöscht\n\n");
+        } else {
+            System.out.println("Ihr Account wird nicht gelöscht");
         }
     }
 
