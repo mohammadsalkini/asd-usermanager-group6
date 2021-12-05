@@ -21,7 +21,7 @@ public class UserView {
     private static final Scanner scanner = new Scanner(System.in);
     private static final UserController userController = new UserController(new UserServiceImpl(new DBConnectorImpl()));
 
-    private static final int TIMER_INTERVALL_IN_SECONDS = 5;
+    private static final int TIMER_INTERVALL_IN_SECONDS = 60;
     private static final SessionTimer sessionTimer = new SessionTimer(TIMER_INTERVALL_IN_SECONDS);
 
     public static String mainPage() {
@@ -39,15 +39,23 @@ public class UserView {
 
             switch (userChoice) {
                 case ANMELDEN:
-                    User loginUser = loginPage();
-                    if (loginUser != null) {
-                        pageAfterLogin(loginUser);
+                    while (true) {
+                        User user = loginPage();
+                        if (user != null) {
+                            boolean isLogout = pageAfterLogin(user);
+                            if (isLogout) {
+                                break;
+                            }
+                        }
+                        break;
+                        // IF the returned user object is null then break, otherwise show the pager
+                        // after login
                     }
                     break;
                 case REGISTRIEREN:
-                    User registerUser = registrationPage();
-                    if (registerUser != null) {
-                        pageAfterLogin(registerUser);
+                    User user = registrationPage();
+                    if (user != null) {
+                        // TODO: show the page after login
                     }
                     break;
                 case PROGRAMM_BEENDEN:
@@ -92,33 +100,29 @@ public class UserView {
         return null;
     }
 
-    private static void pageAfterLogin(User user) throws NoSuchAlgorithmException {
+    private static boolean pageAfterLogin(User user) throws NoSuchAlgorithmException {
+        sessionTimer.resetTimer(TIMER_INTERVALL_IN_SECONDS);
         while (true) {
-            sessionTimer.resetTimer(TIMER_INTERVALL_IN_SECONDS);
             String userChoice = userControlPanel(user.getUsername());
             switch (userChoice) {
                 case PASSWORD_AENDERN:
                     if (!sessionTimer.isSessionValid){
                         System.out.println("Logout wegen Inaktivität von mehr als " + TIMER_INTERVALL_IN_SECONDS + " Sekunden.");
-                        return;
+                        return false;
                     }
                     sessionTimer.resetTimer(TIMER_INTERVALL_IN_SECONDS);
-                    if (!changePasswordPage(user)) {
-                        return;
-                    }
+                    changePasswordPage(user);
                     break;
                 case ACCOUNT_LOESCHEN:
                     if (!sessionTimer.isSessionValid){
                         System.out.println("Logout wegen Inaktivität von mehr als " + TIMER_INTERVALL_IN_SECONDS + " Sekunden.");
-                        return;
+                        return false;
                     }
                     sessionTimer.resetTimer(TIMER_INTERVALL_IN_SECONDS);
-                    if (!deleteAccountPage(user)) {
-                        return;
-                    }
-                    break;
+                    deleteAccountPage(user);
+                    return false;
                 case ABMELDEN:
-                    return;
+                    return false;
                 default:
                     System.out.println("Falsche Eingabe!");
                     break;
@@ -126,20 +130,17 @@ public class UserView {
         }
     }
 
-    private static boolean deleteAccountPage(User user) {
+    private static void deleteAccountPage(User user) {
         sessionTimer.resetTimer(TIMER_INTERVALL_IN_SECONDS);
         System.out.println("Möchten Sie den Account wirklich löschen? (y oder n)");
         String input2 = scanner.next();
         if (!sessionTimer.isSessionValid){
             System.out.println("Logout wegen Inaktivität von mehr als " + TIMER_INTERVALL_IN_SECONDS + " Sekunden.\n\n");
-            return false;
         } else if (input2.equals("y")) {
             userController.deleteAccount(user.getUsername(), user.getPassword());
             System.out.println("Ihr Account wurde gelöscht!\n\n");
-            return false;
         } else {
             System.out.println("Ihr Account konnte nicht gelöscht werden!");
-            return true;
         }
     }
 
