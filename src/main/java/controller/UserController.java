@@ -3,6 +3,8 @@ package controller;
 import model.User;
 import service.UserService;
 
+import java.security.NoSuchAlgorithmException;
+
 public class UserController {
     private final UserService userService;
 
@@ -12,6 +14,10 @@ public class UserController {
 
     public User createAccount (String username, String password, String firstName, String lastName) {
         return userService.createNewUser(username, firstName, lastName, password);
+    }
+
+    public User login(String username, String password) {
+        return userService.getUserByUsernameAndPassword(username, password);
     }
 
     public boolean updatePassword (String username, String oldPassword, String newPassword) {

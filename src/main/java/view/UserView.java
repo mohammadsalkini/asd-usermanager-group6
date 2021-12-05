@@ -4,6 +4,8 @@ import controller.UserController;
 import data.DBConnectorImpl;
 import model.User;
 import service.UserServiceImpl;
+
+import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
 
@@ -29,16 +31,22 @@ public class UserView {
         return scanner.next();
     }
 
-    public static void renderPage() {
+    public static void renderPage()  throws NoSuchAlgorithmException{
         while (true) {
             String userChoice = mainPage();
 
             switch (userChoice) {
                 case ANMELDEN:
                     while (true) {
-                        // TODO: show the login page -> this method should return a User object
-                        // IF the returned user object is null then break, otherwise show the pager after login
+                        User user = loginPage();
+                        if (user != null) {
+                            boolean isLogout = pageAfterLogin(user);
+                            if (isLogout) {
+                                break;
+                            }
+                        }
                         break;
+                        // IF the returned user object is null then break, otherwise show the pager after login
                     }
                     break;
                 case REGISTRIEREN:
@@ -53,6 +61,24 @@ public class UserView {
                     System.out.println("Falsche Eingabe!");
             }
         }
+    }
+
+    private static User loginPage() throws NoSuchAlgorithmException {
+        int count = 1;
+        while (count <= 3) {
+            System.out.println("Username: ");
+            String username = scanner.next();
+            System.out.println("Passwort: ");
+            String password = scanner.next();
+            User user = userController.login(username, password);
+            if (user != null) {
+                return user;
+            } else {
+                System.out.println("Username oder Passwort zum " + count + ". mal nicht korrekt eingegeben.\n");
+                count++;
+            }
+        }
+        return null;
     }
 
     private static User registrationPage() {
