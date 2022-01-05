@@ -18,16 +18,6 @@ class DBConnectorImplTest {
     }
 
     @Test
-    void shouldGetAllUsers() {
-        List<User> users = dbConnectorImpl.selectAllUsers();
-        assertAll(
-                () -> assertFalse(users.isEmpty()),
-                () -> assertEquals("drubinivitz0", users.get(0).getUsername()),
-                () -> assertEquals("rcarvil2", users.get(2).getUsername())
-        );
-    }
-
-    @Test
     void shouldGetUserByUsername() {
         User user = dbConnectorImpl.selectUserByUsernameAndPassword("hkrook1", "RVlBBbtijfU");
         assertAll(
