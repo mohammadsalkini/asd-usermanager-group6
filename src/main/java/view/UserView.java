@@ -3,6 +3,8 @@ package view;
 import controller.UserController;
 import data.DBConnectorImpl;
 import model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import service.UserServiceImpl;
 import utils.SessionTimer;
 
@@ -10,6 +12,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
 public class UserView {
+
+    private static Logger logger = LoggerFactory.getLogger(UserView.class);
 
     private static final String ANMELDEN = "a";
     private static final String REGISTRIEREN = "r";
@@ -34,6 +38,7 @@ public class UserView {
     }
 
     public static void renderPage() throws NoSuchAlgorithmException {
+        logger.debug("In renderPage method.");
         while (true) {
             String userChoice = mainPage();
 
@@ -53,12 +58,13 @@ public class UserView {
                 case PROGRAMM_BEENDEN:
                     System.exit(0);
                 default:
-                    System.out.println("Falsche Eingabe!");
+                    logger.error("Falsche Eingabe!");
             }
         }
     }
 
     private static User loginPage() throws NoSuchAlgorithmException {
+        logger.debug("In loginPage method.");
         int count = 1;
         while (count <= 3) {
             System.out.println("Username: ");
@@ -73,10 +79,12 @@ public class UserView {
                 count++;
             }
         }
+        logger.debug("End of loginPage method.");
         return null;
     }
 
     private static User registrationPage() throws NoSuchAlgorithmException {
+        logger.debug("In registrationPage method.");
         System.out.println("Geben Sie den Usernamen ein: ");
         String username = scanner.next();
         if (!userController.isUserExisting(username)) {
@@ -89,10 +97,12 @@ public class UserView {
             return userController.createAccount(username, password, firstName, lastName);
         }
         System.out.println("Der Benutzer existiert bereits, bitte erneut versuchen.\n\n");
+        logger.debug("End of registrationPage method.");
         return null;
     }
 
     private static void pageAfterLogin(User user) throws NoSuchAlgorithmException {
+        logger.debug("In pageAfterLogin method.");
         while (true) {
             sessionTimer.resetTimer(TIMER_INTERVALL_IN_SECONDS);
             String userChoice = userControlPanel(user.getUsername());
@@ -127,11 +137,14 @@ public class UserView {
     }
 
     private static boolean deleteAccountPage(User user) {
+        logger.debug("In deleteAccountPage method.");
         sessionTimer.resetTimer(TIMER_INTERVALL_IN_SECONDS);
         System.out.println("Möchten Sie den Account wirklich löschen? (y oder n)");
         String input2 = scanner.next();
         if (!sessionTimer.isSessionValid){
             System.out.println("Logout wegen Inaktivität von mehr als " + TIMER_INTERVALL_IN_SECONDS + " Sekunden.\n\n");
+            logger.debug("End of deleteAccountPage method.");
+            logger.info("Logout wegen Inaktivität von mehr als " + TIMER_INTERVALL_IN_SECONDS +" Sekunden.\n\n");
             return false;
         } else if (input2.equals("y")) {
             userController.deleteAccount(user.getUsername(), user.getPassword());
@@ -153,6 +166,7 @@ public class UserView {
     }
 
     private static boolean changePasswordPage(User user) throws NoSuchAlgorithmException {
+        logger.debug("In changePasswordPage method.");
         sessionTimer.resetTimer(TIMER_INTERVALL_IN_SECONDS);
         System.out.println("Neues Passwort: ");
         String newPassword = scanner.next();
