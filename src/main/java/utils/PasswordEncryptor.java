@@ -1,30 +1,17 @@
 package utils;
 
-import java.math.BigInteger;
+import com.google.common.hash.Hashing;
+
 import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
-public class PasswordEncryptor
-{  
-    public static byte[] getSHA(String input) throws NoSuchAlgorithmException
-    {
-        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+public class PasswordEncryptor {
+    private PasswordEncryptor() {
+    }
 
-        return messageDigest.digest(input.getBytes(StandardCharsets.UTF_8));
-    }  
-      
-    public static String toHexString(byte[] hash)  
-    {
-        BigInteger number = new BigInteger(1, hash);
 
-        StringBuilder hexString = new StringBuilder(number.toString(16));  
-
-        while (hexString.length() < 32)  
-        {  
-            hexString.insert(0, '0');  
-        }  
-  
-        return hexString.toString();  
+    public static String hashPassword(String originalPassword) {
+        return Hashing.sha256()
+                .hashString(originalPassword, StandardCharsets.UTF_8)
+                .toString();
     }
 }  
