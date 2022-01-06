@@ -2,8 +2,8 @@ package controller;
 import utils.PasswordEncryptor;
 import model.User;
 import service.UserService;
-
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
 public class UserController {
     private final UserService userService;
@@ -12,12 +12,12 @@ public class UserController {
         this.userService = userService;
     }
 
-    public User login(String username, String password) throws NoSuchAlgorithmException {
+    public Optional<User> login(String username, String password) throws NoSuchAlgorithmException {
         String encryptedPassword = PasswordEncryptor.toHexString(PasswordEncryptor.getSHA(password));
         return userService.getUserByUsernameAndPassword(username, encryptedPassword);
     }
 
-    public User createAccount(String username, String password, String firstName, String lastName)
+    public Optional<User> createAccount(String username, String password, String firstName, String lastName)
             throws NoSuchAlgorithmException {
         String encryptedPassword = PasswordEncryptor.toHexString(PasswordEncryptor.getSHA(password));
         return userService.createNewUser(username, firstName, lastName, encryptedPassword);
@@ -26,8 +26,8 @@ public class UserController {
     public boolean updatePassword(String username, String oldPassword, String newPassword)
             throws NoSuchAlgorithmException {
         String encryptedNewPassword = PasswordEncryptor.toHexString(PasswordEncryptor.getSHA(newPassword));
-        User userByUsername = userService.getUserByUsernameAndPassword(username, oldPassword);
-        return userService.updatePassword(userByUsername, encryptedNewPassword);
+        Optional<User> userByUsername = userService.getUserByUsernameAndPassword(username, oldPassword);
+        return userByUsername.filter(user -> userService.updatePassword(user, encryptedNewPassword)).isPresent();
     }
 
     public boolean deleteAccount(String username, String password) {
@@ -35,6 +35,6 @@ public class UserController {
     }
 
     public boolean isUserExisting(String userName) {
-        return userService.getUserByUserName(userName) != null;
+        return userService.getUserByUserName(userName).isPresent();
     }
 }

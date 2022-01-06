@@ -3,10 +3,8 @@ package data;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 public class DBConnectorImpl implements DBConnector {
 
@@ -16,7 +14,7 @@ public class DBConnectorImpl implements DBConnector {
     private static final String FIRSTNAME = "firstName";
     private static final String LASTNAME = "lastName";
     private static final String PASSWORD = "password";
-    private static final String USERMANAGMENT = "userManagment";
+    private static final String USER_MANAGEMENT = "userManagment";
 
     private Connection connect() {
         String url = "jdbc:sqlite:sqllite/identifier.sqlite";
@@ -24,15 +22,15 @@ public class DBConnectorImpl implements DBConnector {
         try {
             connection = DriverManager.getConnection(url);
         } catch (SQLException e) {
-            System.err.println(e.getMessage());
+            logger.error("Unable to connect to DB - {}",e.getMessage());
         }
         return connection;
     }
 
-    public User selectUserByUsernameAndPassword(String userName, String password) {
+    public Optional<User> selectUserByUsernameAndPassword(String userName, String password) {
         //String sql = "SELECT username, firstName, lastName, password FROM userManagment WHERE username=? AND password=?";
-        String sql = String.format("SELECT %s, %s, %s, %s FROM %s WHERE %s=? AND %s=?", USERNAME, FIRSTNAME, LASTNAME, PASSWORD, USERMANAGMENT, USERNAME, PASSWORD);
-        User user = null;
+        String sql = String.format("SELECT %s, %s, %s, %s FROM %s WHERE %s=? AND %s=?", USERNAME, FIRSTNAME, LASTNAME, PASSWORD, USER_MANAGEMENT, USERNAME, PASSWORD);
+        Optional<User> user = Optional.empty();
         try {
             try (Connection conn = this.connect();
                  PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
@@ -40,11 +38,11 @@ public class DBConnectorImpl implements DBConnector {
                 preparedStatement.setString(2, password);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
-                    user = new User();
-                    user.setUsername(resultSet.getString(USERNAME));
-                    user.setFirstName(resultSet.getString(FIRSTNAME));
-                    user.setLastName(resultSet.getString(LASTNAME));
-                    user.setPassword(resultSet.getString(PASSWORD));
+                    user = Optional.of(new User());
+                    user.get().setUsername(resultSet.getString(USERNAME));
+                    user.get().setFirstName(resultSet.getString(FIRSTNAME));
+                    user.get().setLastName(resultSet.getString(LASTNAME));
+                    user.get().setPassword(resultSet.getString(PASSWORD));
                 }
             }
         } catch (SQLException e) {
@@ -55,7 +53,7 @@ public class DBConnectorImpl implements DBConnector {
 
     public User addUser(String username, String firstName, String lastName, String password) {
         //String sql = "INSERT INTO userManagment(username,firstName,lastName,password) VALUES(?,?,?,?)";
-        String sql = String.format("INSERT INTO %s(%s, %s, %s, %s) VALUES(?,?,?,?)", USERMANAGMENT, USERNAME, FIRSTNAME, LASTNAME, PASSWORD);
+        String sql = String.format("INSERT INTO %s(%s, %s, %s, %s) VALUES(?,?,?,?)", USER_MANAGEMENT, USERNAME, FIRSTNAME, LASTNAME, PASSWORD);
         try (Connection connection = this.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, username);
@@ -71,7 +69,7 @@ public class DBConnectorImpl implements DBConnector {
 
     public boolean deleteUser(String username, String password) {
         //String sql = "DELETE FROM userManagment WHERE username = ? AND password =?";
-        String sql = String.format( "DELETE FROM %s WHERE %s = ? AND %s =?", USERMANAGMENT, USERNAME, PASSWORD);
+        String sql = String.format( "DELETE FROM %s WHERE %s = ? AND %s =?", USER_MANAGEMENT, USERNAME, PASSWORD);
         try (Connection connection = this.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, username);
@@ -87,7 +85,7 @@ public class DBConnectorImpl implements DBConnector {
 
     public boolean updatePassword (String username, String password) {
         //String sql = "UPDATE userManagment SET password =? WHERE username =?";
-        String sql = String.format("UPDATE %s SET %s =? WHERE username =?", USERMANAGMENT, PASSWORD, USERNAME);
+        String sql = String.format("UPDATE %s SET %s =? WHERE username =?", USER_MANAGEMENT, PASSWORD, USERNAME);
         try (Connection connection = this.connect();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, password);
@@ -102,21 +100,21 @@ public class DBConnectorImpl implements DBConnector {
     }
 
     @Override
-    public User selectUserByUserName(String userName) {
-        //String sql = "SELECT username, firstName, lastName, password FROM userManagment WHERE username=?";
-        String sql = String.format("SELECT %s, %s, %s, %s FROM %s WHERE %s=?", USERNAME, FIRSTNAME, LASTNAME, PASSWORD, USERMANAGMENT, USERNAME);
-        User user = null;
+    public Optional<User> selectUserByUserName(String userName) {
+        String sql = "SELECT username, firstName, lastName, password FROM userManagment WHERE username=?";
+       // String sql = String.format("SELECT %s, %s, %s, %s FROM %s WHERE %s=?", USERNAME, FIRSTNAME, LASTNAME, PASSWORD, USER_MANAGEMENT, USERNAME);
+        Optional<User> user = Optional.empty();
         try {
             try (Connection connection = this.connect();
                  PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setString(1, userName);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
-                    user = new User();
-                    user.setUsername(resultSet.getString(USERNAME));
-                    user.setFirstName(resultSet.getString(FIRSTNAME));
-                    user.setLastName(resultSet.getString(LASTNAME));
-                    user.setPassword(resultSet.getString(PASSWORD));
+                    user = Optional.of(new User());;
+                    user.get().setUsername(resultSet.getString(USERNAME));
+                    user.get().setFirstName(resultSet.getString(FIRSTNAME));
+                    user.get().setLastName(resultSet.getString(LASTNAME));
+                    user.get().setPassword(resultSet.getString(PASSWORD));
                 }
             }
         } catch (SQLException e) {

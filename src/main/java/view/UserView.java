@@ -7,8 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.UserServiceImpl;
 import utils.SessionTimer;
-
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class UserView {
@@ -50,9 +50,9 @@ public class UserView {
                     }
                     break;
                 case REGISTRIEREN:
-                    User registerUser = registrationPage();
-                    if (registerUser != null) {
-                        pageAfterLogin(registerUser);
+                    Optional<User> optionalRegisterUser = registrationPage();
+                    if (optionalRegisterUser.isPresent()) {
+                        pageAfterLogin(optionalRegisterUser.get());
                     }
                     break;
                 case PROGRAMM_BEENDEN:
@@ -71,9 +71,9 @@ public class UserView {
             String username = scanner.next();
             System.out.println("Passwort: ");
             String password = scanner.next();
-            User user = userController.login(username, password);
-            if (user != null) {
-                return user;
+            Optional<User> optionalUser = userController.login(username, password);
+            if (optionalUser.isPresent()) {
+                return optionalUser.get();
             } else {
                 System.out.println("Username oder Passwort zum " + count + ". mal nicht korrekt eingegeben.\n");
                 count++;
@@ -83,7 +83,7 @@ public class UserView {
         return null;
     }
 
-    private static User registrationPage() throws NoSuchAlgorithmException {
+    private static Optional<User> registrationPage() throws NoSuchAlgorithmException {
         logger.debug("In registrationPage method.");
         System.out.println("Geben Sie den Usernamen ein: ");
         String username = scanner.next();
@@ -98,7 +98,7 @@ public class UserView {
         }
         System.out.println("Der Benutzer existiert bereits, bitte erneut versuchen.\n\n");
         logger.debug("End of registrationPage method.");
-        return null;
+        return Optional.empty();
     }
 
     private static void pageAfterLogin(User user) throws NoSuchAlgorithmException {
