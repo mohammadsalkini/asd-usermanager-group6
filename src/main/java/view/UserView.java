@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.UserServiceImpl;
 import utils.SessionTimer;
-import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -39,7 +38,7 @@ public class UserView {
         return scanner.next();
     }
 
-    public static void renderPage() throws NoSuchAlgorithmException {
+    public static void renderPage() {
         logger.debug("In renderPage method.");
         int counter = 0;
         boolean status = true;
@@ -69,7 +68,7 @@ public class UserView {
         }
     }
 
-    private static Optional<User> loginPage() throws NoSuchAlgorithmException {
+    private static Optional<User> loginPage() {
         logger.debug("In loginPage method.");
         int loginAttempts = 1;
         while (loginAttempts <= 3) {
@@ -89,7 +88,7 @@ public class UserView {
         return Optional.empty();
     }
 
-    private static Optional<User> registrationPage() throws NoSuchAlgorithmException {
+    private static Optional<User> registrationPage() {
         logger.debug("In registrationPage method.");
         System.out.println("Geben Sie den Usernamen ein: ");
         String username = scanner.next();
@@ -107,7 +106,7 @@ public class UserView {
         return Optional.empty();
     }
 
-    private static void pageAfterLogin(User user) throws NoSuchAlgorithmException {
+    private static void pageAfterLogin(User user) {
         logger.debug("In pageAfterLogin method.");
         while (true) {
             sessionTimer.resetTimer(TIMER_INTERVAL_IN_SECONDS);
@@ -157,7 +156,7 @@ public class UserView {
         return scanner.next();
     }
 
-    private static boolean changePasswordPage(User user) throws NoSuchAlgorithmException {
+    private static boolean changePasswordPage(User user) {
         logger.debug("In changePasswordPage method.");
         sessionTimer.resetTimer(TIMER_INTERVAL_IN_SECONDS);
         System.out.println("Neues Passwort: ");
@@ -181,7 +180,7 @@ public class UserView {
 
     private static boolean isSessionValid () {
         boolean status = true;
-        if (!sessionTimer.isSessionValid){
+        if (!sessionTimer.isSessionValid()){
             System.out.println("Logout wegen Inaktivität von mehr als " + TIMER_INTERVAL_IN_SECONDS + " Sekunden.\n\n");
             logger.info("Logout wegen Inaktivität von mehr als " + TIMER_INTERVAL_IN_SECONDS +" Sekunden.");
             status = false;
