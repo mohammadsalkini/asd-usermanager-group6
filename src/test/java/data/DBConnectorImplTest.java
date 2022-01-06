@@ -30,7 +30,7 @@ class DBConnectorImplTest {
     @Test
     void shouldReturnNullWhenUsernameDoesNotExist() {
         Optional<User> user = dbConnectorImpl.selectUserByUsernameAndPassword("hkrook132", "asdawer");
-        assertNull(user);
+        assertEquals(Optional.empty(), user);
     }
 
     @Test
@@ -62,7 +62,7 @@ class DBConnectorImplTest {
         assertTrue(isUserDeleted);
 
         Optional<User> deletedUser = dbConnectorImpl.selectUserByUsernameAndPassword("TestUsername2", "adasrae");
-        assertNull(deletedUser);
+        assertEquals(Optional.empty(), deletedUser);
     }
 
     @Test
