@@ -2,8 +2,7 @@ package service;
 
 import data.DBConnector;
 import model.User;
-
-import java.util.List;
+import java.util.Optional;
 
 public class UserServiceImpl implements UserService {
 
@@ -14,22 +13,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createNewUser(String username, String firstName, String lastName, String password) {
-        User user = connect.selectUserByUsernameAndPassword(username, password);
-        if (user == null) {
-            return connect.addUser(username, firstName, lastName, password);
+    public Optional<User> createNewUser(String username, String firstName, String lastName, String password) {
+        Optional<User> user = connect.selectUserByUsernameAndPassword(username, password);
+        if (user.isEmpty()) {
+            return Optional.of(connect.addUser(username, firstName, lastName, password));
         }
-        return null;
-    }
-
-    @Override
-    public List<User> getAllUsers() {
-        return null;
-    }
-
-    @Override
-    public User getUserByUsername(String username) {
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -42,12 +31,12 @@ public class UserServiceImpl implements UserService {
         return connect.updatePassword(user.getUsername(), newPassword);
     }
 
-    public User getUserByUserName(String userName) {
+    public Optional<User> getUserByUserName(String userName) {
         return connect.selectUserByUserName(userName);
     }
 
     @Override
-    public User getUserByUsernameAndPassword(String username, String password) {
+    public Optional<User> getUserByUsernameAndPassword(String username, String password) {
         return connect.selectUserByUsernameAndPassword(username, password);
     }
 }
