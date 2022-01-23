@@ -1,12 +1,21 @@
-name: Codecov
-on: [push, pull_request]
-jobs:
-  run:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Fetch
-        uses: actions/checkout@master
-      - name: Upload
-        uses: codecov/codecov-action@v1
-        with:
-          token: ${{ secrets.90998fe7-e853-4c49-b520-d88af777d8f6 }}
+codecov:
+  require_ci_to_pass: false
+coverage:
+  precision: 2
+  round: down
+  range: "70...100"
+  status:
+  project: true
+  patch: yes
+  changes: no
+parsers:
+  gcov:
+  branch_detection:
+  conditional: yes
+  loop: yes
+  method: no
+  macro: no
+comment:
+  layout: "sunburst"
+  behavior: default
+  require_changes: false
