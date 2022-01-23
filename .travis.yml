@@ -2,13 +2,13 @@
 language: java
 #we add the java development kit (jdk)
 jdk:
-  - openjdk15
+  - openjdk11
 
 services:
   - docker
 before_install:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker pull openjdk:15-jdk
+  - docker pull openjdk:11-jdk
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
@@ -20,7 +20,8 @@ addons:
 
 script:
   # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=mohammadsalkini_asd-usermanager-group6
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
+  - -Dsonar.projectKey=mohammadsalkini_asd-usermanager-group6
   - echo -e '<?xml version="1.0" encoding="UTF-8"?>\n<settings
   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0
   http://maven.apache.org/xsd/settings-1.1.0.xsd"
