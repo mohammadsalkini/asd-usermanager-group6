@@ -9,6 +9,10 @@ services:
 before_install:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker pull openjdk:15-jdk
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+  -
 script:
   - echo -e '<?xml version="1.0" encoding="UTF-8"?>\n<settings
   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0
