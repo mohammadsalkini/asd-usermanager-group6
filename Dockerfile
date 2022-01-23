@@ -1,4 +1,4 @@
-FROM openjdk:11-jdk
+FROM openjdk:15-jdk
 LABEL maintainer="E-MAIL"
 VOLUME /tmp
 ARG JAR_FILE
