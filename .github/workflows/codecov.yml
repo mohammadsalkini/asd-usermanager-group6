@@ -8,5 +8,3 @@ jobs:
         uses: actions/checkout@master
       - name: Upload
         uses: codecov/codecov-action@v1
-        with:
-          files: ./lib.c.gcov
