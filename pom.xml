@@ -61,4 +61,25 @@
         </dependency>
     </dependencies>
 
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <email>code@radinger-peer.at</email>
+            <name>Wolfgang Radinger-Peer</name>
+            <url>https://github.com/wolferl42195</url>
+            <id>wolferl42195</id>
+        </developer>
+    </developers>
+    <organization>
+        <name>My Company</name>
+        <url> https://www.myCompany.com/</url>
+    </organization>
+
+
 </project>

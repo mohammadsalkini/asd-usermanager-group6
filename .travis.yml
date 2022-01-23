@@ -12,8 +12,15 @@ before_install:
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-  -
+addons:
+  sonarcloud:
+    organization: "mohammadsalkini"
+    token:
+      secure: "**************************" # encrypted value of your token
+
 script:
+  # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=mohammadsalkini_asd-usermanager-group6
   - echo -e '<?xml version="1.0" encoding="UTF-8"?>\n<settings
   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0
   http://maven.apache.org/xsd/settings-1.1.0.xsd"
