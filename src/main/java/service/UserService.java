@@ -1,23 +1,14 @@
 package service;
 
 import model.User;
-
-import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
-    User createNewUser(String username, String firstName, String lastName, String password);
-
-    List<User> getAllUsers();
-
-    User getUserByUsername(String username);
-
+    Optional<User> createNewUser(String username, String firstName, String lastName, String password);
     boolean deleteAccount(String username, String password);
-
     boolean updatePassword(User user, String newPassword);
-
-    User getUserByUserName(String userName);
-
-    User getUserByUsernameAndPassword(String username, String password);
+    Optional<User> getUserByUserName(String userName);
+    Optional<User> getUserByUsernameAndPassword(String username, String password);
 
 }
