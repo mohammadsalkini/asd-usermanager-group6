@@ -8,3 +8,5 @@ jobs:
         uses: actions/checkout@master
       - name: Upload
         uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.90998fe7-e853-4c49-b520-d88af777d8f6 }}
