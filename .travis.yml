@@ -9,7 +9,9 @@ services:
 before_install:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker pull openjdk:11-jdk
-
+env:
+  global:
+    - CODECOV_TOKEN=90998fe7-e853-4c49-b520-d88af777d8f6
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 addons:
